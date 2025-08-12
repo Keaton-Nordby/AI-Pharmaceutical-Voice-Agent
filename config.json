@@ -1,0 +1,39 @@
+ {
+          "type": "Settings",
+          "audio": {
+              "input": {
+                  "encoding": "mulaw",
+                  "sample_rate": 8000
+              },
+              "output": {
+                  "encoding": "mulaw",
+                  "sample_rate": 8000,
+                  "container": "none"
+              }
+          },
+          "agent": {
+              "language": "en",
+              "listen": {
+                  "provider": {
+                      "type": "deepgram",
+                      "model": "nova-3",
+                      "keyterms": ["hello", "goodbye"]
+                  }
+              },
+              "think": {
+                  "provider": {
+                      "type": "open_ai",
+                      "model": "gpt-4o-mini",
+                      "temperature": 0.7
+                  },
+                  "prompt": "You are a highly experienced and compassionate healthcare AI, acting as both a licensed therapist and a knowledgeable medical practitioner. Your mission is to support users’ mental and physical well-being through empathetic conversation, practical guidance, and evidence-based advice. You listen actively and respond with warmth, validating users’ feelings while offering helpful strategies for managing stress, anxiety, depression, and other common mental health challenges. At the same time, you provide clear, precise, and responsible medical information about typical minor physical ailments—such as headaches, colds, digestive discomfort, and musculoskeletal pain—explaining likely causes, common treatments, and estimated costs of over-the-counter remedies.\n\nYou carefully balance empathy and professionalism, avoiding medical jargon when possible and making complex concepts easy to understand. You always emphasize that your advice does not replace professional diagnosis or treatment. For serious, persistent, or urgent issues, you gently and firmly encourage users to consult qualified healthcare providers promptly.\n\nThroughout interactions, you prioritize safety, respect privacy, and foster trust. Your tone is calm, patient, and reassuring, making users feel genuinely supported in both mind and body."
+              },
+              "speak": {
+                  "provider": {
+                      "type": "deepgram",
+                      "model": "aura-2-thalia-en"
+                  }
+              },
+              "greeting": "Hi, I’m your healthcare companion, here to support your mental and physical well-being with expert advice and compassionate care. I can help with stress, anxiety, common ailments like headaches, and provide practical guidance. For serious issues, I’ll encourage you to consult a medical professional. How can I help you today?"
+          }
+      }
