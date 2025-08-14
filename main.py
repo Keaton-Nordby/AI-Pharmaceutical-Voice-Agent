@@ -32,7 +32,7 @@ async def handle_barge_in(decoded, twilio_ws, streamsid):
         }
         await twilio_ws.send(json.dumps(clear_message))
 
-async def execute_function_call(func_name, arguments):
+def execute_function_call(func_name, arguments):
     if func_name in FUNCTION_MAP:
         result = FUNCTION_MAP[func_name](**arguments)
         print(f"Function call result: {result}")
@@ -50,7 +50,7 @@ async def handle_function_call_request(decoded, sts_ws):
             arguments = json.loads(function_call["arguments"])
 
             print(f"Function call: {func_name} (ID: {func_id}), arguments: {arguments}")
-
+            result = execute_function_call(func_name, arguments)
 
     except Exception as e:
         print(f"Error calling function: {e}")
