@@ -4,6 +4,7 @@ import json
 import websockets
 import os
 from dotenv import load_dotenv
+from pharmacy_functions import FUNCTION_MAP
 
 load_dotenv()
 
@@ -31,10 +32,36 @@ async def handle_barge_in(decoded, twilio_ws, streamsid):
         }
         await twilio_ws.send(json.dumps(clear_message))
 
+async def execute_function_call(func_name, arguments):
+    if func_name in FUNCTION_MAP:
+        result = FUNCTION_MAP[func_name](**arguments)
+        print(f"Function call result: {result}")
+        return result
+    else:
+        result = {"error": f"Unknown function: {func_name}"}
+        print(result)
+        return result
+
+async def handle_function_call_request(decoded, sts_ws):
+    try:
+        for function_call in decoded["functions"]:
+            func_name = function_call["name"]
+            func_id = function_call["id"]
+            arguments = json.loads(function_call["arguments"])
+
+            print(f"Function call: {func_name} (ID: {func_id}), arguments: {arguments}")
+
+
+    except Exception as e:
+        print(f"Error calling function: {e}")
+        error_result = None
+
 async def handle_text_message(decoded, twilio_ws, sts_ws, streamsid):
     await handle_barge_in(decoded, twilio_ws, streamsid)
 
     # TODO we need to handle function calling
+    if decoded["type"] == "FunctionCallRequest":
+        await handle_function_call_request(decoded, sts_ws)
 
 async def sts_sender(sts_ws, audio_queue):
     print("sts_sender started")

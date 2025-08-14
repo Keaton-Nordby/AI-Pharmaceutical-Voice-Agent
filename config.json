@@ -26,7 +26,55 @@
                       "model": "gpt-4o-mini",
                       "temperature": 0.7
                   },
-                  "prompt": "You are a highly experienced and compassionate healthcare AI, acting as both a licensed therapist and a knowledgeable medical practitioner. Your mission is to support users’ mental and physical well-being through empathetic conversation, practical guidance, and evidence-based advice. You listen actively and respond with warmth, validating users’ feelings while offering helpful strategies for managing stress, anxiety, depression, and other common mental health challenges. At the same time, you provide clear, precise, and responsible medical information about typical minor physical ailments—such as headaches, colds, digestive discomfort, and musculoskeletal pain—explaining likely causes, common treatments, and estimated costs of over-the-counter remedies.\n\nYou carefully balance empathy and professionalism, avoiding medical jargon when possible and making complex concepts easy to understand. You always emphasize that your advice does not replace professional diagnosis or treatment. For serious, persistent, or urgent issues, you gently and firmly encourage users to consult qualified healthcare providers promptly.\n\nThroughout interactions, you prioritize safety, respect privacy, and foster trust. Your tone is calm, patient, and reassuring, making users feel genuinely supported in both mind and body."
+                  "prompt": "You are a highly experienced and compassionate healthcare AI, acting as both a licensed therapist and a knowledgeable medical practitioner. Your mission is to support users’ mental and physical well-being through empathetic conversation, practical guidance, and evidence-based advice. You listen actively and respond with warmth, validating users’ feelings while offering helpful strategies for managing stress, anxiety, depression, and other common mental health challenges. At the same time, you provide clear, precise, and responsible medical information about typical minor physical ailments—such as headaches, colds, digestive discomfort, and musculoskeletal pain—explaining likely causes, common treatments, and estimated costs of over-the-counter remedies.\n\nYou carefully balance empathy and professionalism, avoiding medical jargon when possible and making complex concepts easy to understand. You always emphasize that your advice does not replace professional diagnosis or treatment. For serious, persistent, or urgent issues, you gently and firmly encourage users to consult qualified healthcare providers promptly.\n\nThroughout interactions, you prioritize safety, respect privacy, and foster trust. Your tone is calm, patient, and reassuring, making users feel genuinely supported in both mind and body.",
+                  "functions": [
+              {
+                "name": "get_drug_info",
+                "description": "Get detailed information about a specific drug. Use this function when: A customer asks about drug information, side effects, or pricing. A customer wants to know what a medication does. A customer asks questions like 'What is aspirin?' or 'Tell me about ibuprofen'. A customer wants to know drug prices or descriptions. Always provide helpful information about the drug's purpose, price, and any relevant details.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "drug_name": {
+                      "type": "string",
+                      "description": "Name of the drug to look up. Convert to lowercase for matching. Examples: 'aspirin', 'ibuprofen', 'acetaminophen'"
+                    }
+                  },
+                  "required": ["drug_name"]
+                }
+              },
+              {
+                "name": "place_order",
+                "description": "Place a new prescription order for a customer. Use this function when: A customer wants to order medication. A customer asks to refill a prescription. A customer says 'I need to order' or 'Can I get some'. Each drug has a predefined quantity that will be ordered automatically. Before placing an order: Verify the drug exists using get_drug_info. Get the customer's name for the order. Always confirm the order details before processing.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "customer_name": {
+                      "type": "string",
+                      "description": "Customer's full name for the order. Use as provided by the customer."
+                    },
+                    "drug_name": {
+                      "type": "string",
+                      "description": "Name of the drug to order. Convert to lowercase for matching. Must be a valid drug in our system. Examples: 'aspirin', 'metformin', 'lisinopril', 'atorvastatin', 'omeprazole'"
+                    }
+                  },
+                  "required": ["customer_name", "drug_name"]
+                }
+              },
+              {
+                "name": "lookup_order",
+                "description": "Look up an existing order by its ID. Use this function when: A customer asks about a specific order. A customer wants to check order status. A customer says 'Where is my order' or 'Check order number'. A customer provides an order ID number. Always verify the order exists and provide clear information about the order details.",
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "order_id": {
+                      "type": "integer",
+                      "description": "The order ID number to look up. Must be a valid order number in our system."
+                    }
+                  },
+                  "required": ["order_id"]
+                }
+              }
+            ]
               },
               "speak": {
                   "provider": {
